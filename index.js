@@ -19,40 +19,61 @@ const param2 = argumentos[4]
 const param3 = argumentos[5]
 const param4 = argumentos[6]
 
-const solicitarCuenta = async (client, release) => {
-    const cursor = new Cursor("SELECT * FROM cuentas")
-    const cursorRespuesta = await client.query(cursor)
-    cursorRespuesta.read(20, (err, rows) => {
-        // Paso 7
-        console.log(rows)
-        // Paso 8
-        cursorRespuesta.close()
-        release()
-    })
+const solicitarT = async (client, release, id) => {
+    const SQLQuery = {
+        text: "SELECT * FROM transacciones WHERE cuenta = $1;",
+        values: [id]
+    }
+
+    try {
+        const cursor = new Cursor(SQLQuery.text, SQLQuery.values)
+        const cursorRespuesta = await client.query(cursor)
+        cursorRespuesta.read(10, (err, rows) => {
+            // Paso 7
+            console.log(rows)
+            // Paso 8
+            cursorRespuesta.close()
+            release()
+        })
+    } catch (errorConsulta) {
+        console.log(errorConsulta.code)
+    }
 }
 
-const solicitarTransacciones = async (client, release) => {
-    const cursor = new Cursor("SELECT * FROM transacciones")
-    const cursorRespuesta = await client.query(cursor)
-    cursorRespuesta.read(20, (err, rows) => {
-        // Paso 7
-        console.log(rows)
-        // Paso 8
-        cursorRespuesta.close()
-        release()
-    })
+const solicitarC = async (client, release, id) => {
+    const SQLQuery = {
+        text: "SELECT * FROM cuentas WHERE id = $1",
+        values: [id]
+    }
+    try {
+        const cursor = new Cursor(SQLQuery.text, SQLQuery.values)
+        const cursorRespuesta = await client.query(cursor)
+        cursorRespuesta.read(20, (err, rows) => {
+            // Paso 7
+            console.log(rows)
+            // Paso 8
+            cursorRespuesta.close()
+            release()
+        })
+    } catch (errorConsulta) {
+        console.log(errorConsulta.code)
+    }
 }
 
-pool.connect(async (error_conexion, client, release) => {
-    if (error_conexion) {
-        console.error(error_conexion.code)
+
+pool.connect(async (errorConexion, client, release) => {
+    if (errorConexion) {
+        console.error(errorConexion.code)
     } else {
         switch (acccionSql) {
-            case 'solicitarCuenta':
-                await solicitarCuenta(client, release)
+            case 'solicitarC':
+                await solicitarC(client, release, param1)
                 break
-            case 'solicitarTransacciones':
-                await solicitarTransacciones(client, release)
+            case 'solicitarT':
+                await solicitarT(client, release, param1)
+                break
+            case 'realizarT':
+                // await realizarT(client, release, param1)
                 break
             default:
                 console.log('Error: funcion no especificada o mal escrita.')
@@ -61,3 +82,4 @@ pool.connect(async (error_conexion, client, release) => {
         pool.end()
     }
 })
+
