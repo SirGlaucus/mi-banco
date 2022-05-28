@@ -1,5 +1,8 @@
 const Cursor = require("pg-cursor")
 
+// Crear una función asíncrona que registre una nueva transacción utilizando valores
+// ingresados como argumentos en la línea de comando. Debe mostrar por consola la
+// última transacción realizada
 const realizarT = async (client, release, descripcion, fecha, valor, id) => {
     const SQLInsert = {
         text: "INSERT INTO transacciones VALUES ($1, $2, $3, $4) RETURNING *;",
@@ -21,7 +24,6 @@ const realizarT = async (client, release, descripcion, fecha, valor, id) => {
         release()
     } catch (errorConsulta) {
         await client.query("ROLLBACK");
-        // Paso 1
         console.log("Error código: " + e.code);
         console.log("Detalle del error: " + e.detail);
         console.log("Tabla originaria del error: " + e.table);
@@ -29,6 +31,8 @@ const realizarT = async (client, release, descripcion, fecha, valor, id) => {
     }
 }
 
+// Realizar una función asíncrona que consulte la tabla de transacciones y retorne
+// máximo 10 registros de una cuenta en específico. Debes usar cursores para esto.
 const solicitarT = async (client, release, id) => {
     const SQLQuery = {
         text: "SELECT * FROM transacciones WHERE cuenta = $1;",
@@ -39,9 +43,7 @@ const solicitarT = async (client, release, id) => {
         const cursor = new Cursor(SQLQuery.text, SQLQuery.values)
         const cursorRespuesta = await client.query(cursor)
         cursorRespuesta.read(10, (err, rows) => {
-            // Paso 7
             console.log(rows)
-            // Paso 8
             cursorRespuesta.close()
             release()
         })
@@ -49,6 +51,10 @@ const solicitarT = async (client, release, id) => {
         console.log(errorConsulta.code)
     }
 }
+
+// Realizar una función asíncrona que consulte el saldo de una cuenta y que sea
+//ejecutada con valores ingresados como argumentos en la línea de comando. Debes
+//usar cursores para esto.
 
 const solicitarC = async (client, release, id) => {
     const SQLQuery = {
@@ -59,9 +65,7 @@ const solicitarC = async (client, release, id) => {
         const cursor = new Cursor(SQLQuery.text, SQLQuery.values)
         const cursorRespuesta = await client.query(cursor)
         cursorRespuesta.read(20, (err, rows) => {
-            // Paso 7
             console.log(rows)
-            // Paso 8
             cursorRespuesta.close()
             release()
         })
