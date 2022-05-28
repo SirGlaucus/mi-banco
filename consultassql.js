@@ -3,7 +3,7 @@ const Cursor = require("pg-cursor")
 // Crear una función asíncrona que registre una nueva transacción utilizando valores
 // ingresados como argumentos en la línea de comando. Debe mostrar por consola la
 // última transacción realizada
-const realizarT = async (client, release, descripcion, fecha, valor, id) => {
+const realizarTransaccion = async (client, release, descripcion, fecha, valor, id) => {
     const SQLInsert = {
         text: "INSERT INTO transacciones VALUES ($1, $2, $3, $4) RETURNING *;",
         values: [descripcion, fecha, valor, id]
@@ -33,7 +33,7 @@ const realizarT = async (client, release, descripcion, fecha, valor, id) => {
 
 // Realizar una función asíncrona que consulte la tabla de transacciones y retorne
 // máximo 10 registros de una cuenta en específico. Debes usar cursores para esto.
-const solicitarT = async (client, release, id) => {
+const solicitarTransaccion = async (client, release, id) => {
     const SQLQuery = {
         text: "SELECT * FROM transacciones WHERE cuenta = $1;",
         values: [id]
@@ -56,7 +56,7 @@ const solicitarT = async (client, release, id) => {
 //ejecutada con valores ingresados como argumentos en la línea de comando. Debes
 //usar cursores para esto.
 
-const solicitarC = async (client, release, id) => {
+const solicitarCuenta = async (client, release, id) => {
     const SQLQuery = {
         text: "SELECT * FROM cuentas WHERE id = $1",
         values: [id]
@@ -75,7 +75,7 @@ const solicitarC = async (client, release, id) => {
 }
 
 module.exports = {
-    realizarT,
-    solicitarT,
-    solicitarC
+    realizarTransaccion,
+    solicitarTransaccion,
+    solicitarCuenta
 }

@@ -1,6 +1,6 @@
 const { Pool } = require("pg")
 
-const { realizarT, solicitarT, solicitarC } = require('./consultassql')
+const { realizarTransaccion, solicitarTransaccion, solicitarCuenta } = require('./consultassql')
 
 const config = {
     user: "postgres",
@@ -24,14 +24,14 @@ pool.connect(async (errorConexion, client, release) => {
         console.error(errorConexion.code)
     } else {
         switch (acccionSql) {
-            case 'solicitarC':
-                await solicitarC(client, release, param1)
+            case 'solicitarCuenta':
+                await solicitarCuenta(client, release, param1)
                 break
-            case 'solicitarT':
-                await solicitarT(client, release, param1)
+            case 'solicitarTransaccion':
+                await solicitarTransaccion(client, release, param1)
                 break
-            case 'realizarT':
-                await realizarT(client, release, param1, param2, param3, param4)
+            case 'realizarTransaccion':
+                await realizarTransaccion(client, release, param1, param2, param3, param4)
                 break
             default:
                 console.log('Error: funcion no especificada o mal escrita.')
