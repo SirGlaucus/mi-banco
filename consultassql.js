@@ -18,16 +18,16 @@ const realizarTransaccion = async (client, release, descripcion, fecha, valor, i
         await client.query("BEGIN")
         const res = await client.query(SQLInsert)
         await client.query(SQLUPdate)
-        await client.query("COMMIT");
+        await client.query("COMMIT")
         console.log(`La transaccion ha sido realizada con exito. Se han descontado ${valor} de la cuenta numero ${id}.`)
-        console.log(res.rows[0]);
+        console.log(res.rows[0])
         release()
     } catch (errorConsulta) {
-        await client.query("ROLLBACK");
-        console.log("Error código: " + e.code);
-        console.log("Detalle del error: " + e.detail);
-        console.log("Tabla originaria del error: " + e.table);
-        console.log("Restricción violada en el campo: " + e.constraint);
+        await client.query("ROLLBACK")
+        console.log("Error código: " + e.code)
+        console.log("Detalle del error: " + e.detail)
+        console.log("Tabla originaria del error: " + e.table)
+        console.log("Restricción violada en el campo: " + e.constraint)
     }
 }
 
@@ -58,7 +58,7 @@ const solicitarTransaccion = async (client, release, id) => {
 
 const solicitarCuenta = async (client, release, id) => {
     const SQLQuery = {
-        text: "SELECT * FROM cuentas WHERE id = $1",
+        text: "SELECT * FROM cuentas WHERE id = $1;",
         values: [id]
     }
     try {
