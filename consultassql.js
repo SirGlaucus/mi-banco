@@ -2,7 +2,7 @@ const Cursor = require("pg-cursor")
 
 const realizarT = async (client, release, descripcion, fecha, valor, id) => {
     const SQLInsert = {
-        text: "INSERT INTO transacciones VALUES ($1, $2, $3, $4);",
+        text: "INSERT INTO transacciones VALUES ($1, $2, $3, $4) RETURNING *;",
         values: [descripcion, fecha, valor, id]
     }
 
@@ -13,10 +13,11 @@ const realizarT = async (client, release, descripcion, fecha, valor, id) => {
 
     try {
         await client.query("BEGIN")
-        await client.query(SQLInsert)
+        const res = await client.query(SQLInsert)
         await client.query(SQLUPdate)
         await client.query("COMMIT");
         console.log(`La transaccion ha sido realizada con exito. Se han descontado ${valor} de la cuenta numero ${id}.`)
+        console.log(res.rows[0]);
         release()
     } catch (errorConsulta) {
         await client.query("ROLLBACK");

@@ -1,4 +1,4 @@
-# Desafio Always Music v2
+# Desafio Mi Banco
 
 En este desafío deberás realizar una aplicación Node que se conecte con PostgreSQL, utilice transacciones y cursores para simular el comportamiento de una transacción bancaria.
 
